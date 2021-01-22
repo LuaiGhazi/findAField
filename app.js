@@ -36,6 +36,9 @@ const ExpressError = require('./utils/ExpressError')
 //Routes for the field pages 
 const fields = require('./routes/fields')
 
+//Routes for the review pages 
+const reviews = require('./routes/reviews')
+
 //Conncting to the mongoDB named find-a-field
 //27107 is the default port 
 mongoose.connect('mongodb://localhost:27017/find-a-field', {
@@ -72,58 +75,16 @@ app.use(express.urlencoded({ extended: true }))
 //'_method' is the query string that we're using 
 app.use(methodOverride('_method'))
 
-//Middleware for server side validation
-const validateField = (req, res, next) => {
-    const { error } = fieldSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else {
-        next();
-    }
-}
 
-
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else {
-        next();
-    }
-}
-
-
+//Routes for the fields and reviews pages 
 app.use('/fields', fields)
+app.use('/fields/:id/reviews', reviews)
+
 
 //Route to the home page 
 app.get('/', (req, res) => {
     res.render('home')
 })
-
-
-//Posting Reviews
-app.post('/fields/:id/reviews', validateReview, catchAsync(async (req, res) => {
-    // res.send('You made it')
-    const field = await Field.findById(req.params.id);
-    const review = new Review(req.body.review);
-    //Reviews in the field schema are an array
-    //so we just push into it 
-    field.reviews.push(review);
-    await review.save();
-    await field.save();
-    res.redirect(`/fields/${field._id}`)
-}))
-
-//Deleting Reviews 
-app.delete('/fields/:id/reviews/:reviewId', catchAsync(async (req, res) => {
-    const { id, reviewId } = req.params;
-    await Field.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/fields/${id}`);
-}))
-
 
 
 app.all('*', (req, res, next) => {
