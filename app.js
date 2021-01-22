@@ -10,7 +10,7 @@ const path = require('path');
 //using JS 
 const mongoose = require('mongoose');
 
-//Requiring our schema 
+//Requiring our field schema 
 const Field = require('./models/field');
 
 //Requiring method-override so that we can PATCH and PUT 
@@ -20,8 +20,12 @@ const methodOverride = require('method-override');
 //Requiring ejs-mate so that we can use boilerplates and partials 
 const ejsMate = require('ejs-mate');
 
-//Requiring joi for Server Side validation 
-const { fieldSchema } = require('./schemas.js')
+//Requiring joi schemas for Server Side validation 
+const { fieldSchema, reviewSchema } = require('./schemas.js')
+
+
+//Requiring the review model 
+const Review = require('./models/review')
 
 // Requiring our catchAsync for error-handling
 const catchAsync = require('./utils/catchAsync')
@@ -76,6 +80,19 @@ const validateField = (req, res, next) => {
     }
 }
 
+
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next();
+    }
+}
+
+
+
 //Route to the home page 
 app.get('/', (req, res) => {
     res.render('home')
@@ -103,10 +120,11 @@ app.post('/fields', validateField, catchAsync(async (req, res) => {
 
 //Route to the field specific page 
 app.get('/fields/:id', catchAsync(async (req, res) => {
-    const field = await Field.findById(req.params.id);
+    //Populating reviews because they're in their own collection 
+    //and have a one to many relationship
+    const field = await Field.findById(req.params.id).populate('reviews');
     res.render('fields/show', { field })
 }))
-
 
 //Route to edit specific page 
 app.get('/fields/:id/edit', catchAsync(async (req, res) => {
@@ -126,6 +144,29 @@ app.delete('/fields/:id/', catchAsync(async (req, res) => {
     await Field.findByIdAndDelete(id);
     res.redirect('/fields')
 }))
+
+//Posting Reviews
+app.post('/fields/:id/reviews', validateReview, catchAsync(async (req, res) => {
+    // res.send('You made it')
+    const field = await Field.findById(req.params.id);
+    const review = new Review(req.body.review);
+    //Reviews in the field schema are an array
+    //so we just push into it 
+    field.reviews.push(review);
+    await review.save();
+    await field.save();
+    res.redirect(`/fields/${field._id}`)
+}))
+
+//Deleting Reviews 
+app.delete('/fields/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Field.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/fields/${id}`);
+}))
+
+
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
