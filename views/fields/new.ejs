@@ -2,8 +2,7 @@
 <div class="row">
     <h1 class="text-center">New Field</h1>
     <div class="col-md-6 offset-md-3">
-        <form action="/fields" method="POST" class='validated-form' enctype='multipart/form-data'
-            enctype="multipart/form-data" novalidate>
+        <form action="/fields" method="POST" novalidate class='validated-form'>
             <div class="mb-3">
                 <label class="form-label" for="title">Title </label>
                 <input class="form-control" type="text" id="title" name="field[title]" required>
@@ -51,26 +50,4 @@
             </div>
         </form>
     </div>
-
-    <script>
-        (function () {
-            'use strict'
-
-            // bsCustomFileInput.init()
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.querySelectorAll('.validated-form')
-
-            // Loop over them and prevent submission
-            Array.from(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
-
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-        })()
-    </script>
+</div>

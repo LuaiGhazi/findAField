@@ -20,7 +20,14 @@ const methodOverride = require('method-override');
 //Requiring ejs-mate so that we can use boilerplates and partials 
 const ejsMate = require('ejs-mate');
 
+//Requiring joi for Server Side validation 
+const { fieldSchema } = require('./schemas.js')
 
+// Requiring our catchAsync for error-handling
+const catchAsync = require('./utils/catchAsync')
+
+//For errors that we don't throw 
+const ExpressError = require('./utils/ExpressError')
 
 //Conncting to the mongoDB named find-a-field
 //27107 is the default port 
@@ -58,6 +65,16 @@ app.use(express.urlencoded({ extended: true }))
 //'_method' is the query string that we're using 
 app.use(methodOverride('_method'))
 
+//Middleware for server side validation
+const validateField = (req, res, next) => {
+    const { error } = fieldSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next();
+    }
+}
 
 //Route to the home page 
 app.get('/', (req, res) => {
@@ -67,48 +84,59 @@ app.get('/', (req, res) => {
 //Route to the fields page
 //Pass the fields vble (an object) through the render line
 // so that the EJS page has access to that variable
-app.get('/fields', async (req, res) => {
+app.get('/fields', catchAsync(async (req, res) => {
     const fields = await Field.find({});
     res.render('fields/index', { fields })
-})
+}))
 
 //Route to create new field 
-app.get('/fields/new', async (req, res) => {
+app.get('/fields/new', catchAsync(async (req, res) => {
     const field = await Field.findById(req.params.id);
     res.render('fields/new', { field })
-})
+}))
 
-app.post('/fields', async (req, res) => {
+app.post('/fields', validateField, catchAsync(async (req, res) => {
     const field = new Field(req.body.field);
     await field.save();
     res.redirect(`/fields/${field._id}`)
-})
+}))
+
 //Route to the field specific page 
-app.get('/fields/:id', async (req, res) => {
+app.get('/fields/:id', catchAsync(async (req, res) => {
     const field = await Field.findById(req.params.id);
     res.render('fields/show', { field })
-})
+}))
 
 
 //Route to edit specific page 
-app.get('/fields/:id/edit', async (req, res) => {
+app.get('/fields/:id/edit', catchAsync(async (req, res) => {
     const field = await Field.findById(req.params.id);
     res.render('fields/edit', { field })
-})
+}))
 
-app.put('/fields/:id/', async (req, res) => {
+app.put('/fields/:id/', validateField, catchAsync(async (req, res) => {
     const { id } = req.params
     const field = await Field.findByIdAndUpdate(id, { ...req.body.field })
     res.redirect(`/fields/${field._id}`)
-})
+}))
 
 //Delete a field 
-app.delete('/fields/:id/', async (req, res) => {
+app.delete('/fields/:id/', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Field.findByIdAndDelete(id);
     res.redirect('/fields')
+}))
+
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', 404))
 })
 
+//For Errors we didn't throw 
+app.use((err, req, res, next) => {
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = 'Oh no, something went wrong!'
+    res.status(statusCode).render('error', { err })
+})
 
 // Setting the server we're listening to 
 app.listen(3000, () => {
