@@ -45,6 +45,7 @@ mongoose.connect('mongodb://localhost:27017/find-a-field', {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
 });
 
 
@@ -74,6 +75,9 @@ app.use(express.urlencoded({ extended: true }))
 
 //'_method' is the query string that we're using 
 app.use(methodOverride('_method'))
+
+//Telling express to serve our 'public' directory 
+app.use(express.static(path.join(__dirname, 'public')))
 
 
 //Routes for the fields and reviews pages 
