@@ -33,6 +33,9 @@ const catchAsync = require('./utils/catchAsync')
 //For errors that we don't throw 
 const ExpressError = require('./utils/ExpressError')
 
+//Routes for the field pages 
+const fields = require('./routes/fields')
+
 //Conncting to the mongoDB named find-a-field
 //27107 is the default port 
 mongoose.connect('mongodb://localhost:27017/find-a-field', {
@@ -92,58 +95,13 @@ const validateReview = (req, res, next) => {
 }
 
 
+app.use('/fields', fields)
 
 //Route to the home page 
 app.get('/', (req, res) => {
     res.render('home')
 })
 
-//Route to the fields page
-//Pass the fields vble (an object) through the render line
-// so that the EJS page has access to that variable
-app.get('/fields', catchAsync(async (req, res) => {
-    const fields = await Field.find({});
-    res.render('fields/index', { fields })
-}))
-
-//Route to create new field 
-app.get('/fields/new', catchAsync(async (req, res) => {
-    const field = await Field.findById(req.params.id);
-    res.render('fields/new', { field })
-}))
-
-app.post('/fields', validateField, catchAsync(async (req, res) => {
-    const field = new Field(req.body.field);
-    await field.save();
-    res.redirect(`/fields/${field._id}`)
-}))
-
-//Route to the field specific page 
-app.get('/fields/:id', catchAsync(async (req, res) => {
-    //Populating reviews because they're in their own collection 
-    //and have a one to many relationship
-    const field = await Field.findById(req.params.id).populate('reviews');
-    res.render('fields/show', { field })
-}))
-
-//Route to edit specific page 
-app.get('/fields/:id/edit', catchAsync(async (req, res) => {
-    const field = await Field.findById(req.params.id);
-    res.render('fields/edit', { field })
-}))
-
-app.put('/fields/:id/', validateField, catchAsync(async (req, res) => {
-    const { id } = req.params
-    const field = await Field.findByIdAndUpdate(id, { ...req.body.field })
-    res.redirect(`/fields/${field._id}`)
-}))
-
-//Delete a field 
-app.delete('/fields/:id/', catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Field.findByIdAndDelete(id);
-    res.redirect('/fields')
-}))
 
 //Posting Reviews
 app.post('/fields/:id/reviews', validateReview, catchAsync(async (req, res) => {
