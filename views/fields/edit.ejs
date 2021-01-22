@@ -1,26 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Field</title>
-</head>
-
-<body>
-    <h1>EDIT FIELDS</h1>
-    <form action="/fields/<%= field._id %>/?_method=PUT" method="POST">
-        <div>
-            <label for="title"> Title </label>
-            <input type="text" id="title" name="field[title]" value="<%= field.title %>">
-        </div>
-        <div>
-            <label for="location"> Location </label>
-            <input type="text" id="location" name="field[location]" value="<%= field.location %>">
-        </div>
-        <button> Update Field </button>
-
-    </form>
-</body>
-
-</html>
+<% layout('layouts/boilerplate')%>
+<div class="row">
+    <h1 class="text-center">Edit Field</h1>
+    <div class="col-md-6 offset-md-3">
+        <form action="/fields/<%= field._id %>/?_method=PUT" method="POST" novalidate class='validated-form'>
+            <div class="mb-3">
+                <label class="form-label" for="title">Title </label>
+                <input class="form-control" type="text" id="title" name="field[title]" value="<%= field.title %>"
+                    required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location </label>
+                <input class="form-control" type="text" id="location" name="field[location]"
+                    value="<%= field.location %>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class=" mb-3">
+                <label class="form-label" for="image">Image Url</label>
+                <input class="form-control" type="text" id="image" name="field[image]" value="<%= field.image%>"
+                    required>
+            </div>
+            <div class='mb-3'>
+                <label class="form-label" for="price">Price</label>
+                <div class="input-group">
+                    <span class="input-group-text" id="price-label">$</span>
+                    <input class="form-control" type="text" id=price placeholder="0.00" aria-label='price'
+                        aria-describedby="price-label" name='field[price]' value="<%= field.price%>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" type="text" id="description" required
+                    name="field[description]"><%= field.description%></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-success">Edit Field</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Field</title>
+    <!-- Bootstrap css link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+
+<body class="d-flex flex-column vh-100">
+    <!-- Placing the navbar partial into our boilerplate -->
+    <%- include('../partials/navbar') %>
+    <!-- placed the body in a container and added a margin at the top -->
+    <main class="container mt-5">
+        <!-- the below tag represents where the info of each file 
+        that utilizes the boilerplate will be inserted-->
+        <%- body %>
+    </main>
+    <!-- Placing the footer partial into our boilerplate -->
+    <%- include('../partials/footer') %>
+    <!-- Bootstap js link -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+    <!-- bs-custom-file-button -->
+    <script src='https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js'></script>
+    <!-- JS for form validation -->
+    <script src='/javascripts/validateForms.js'>
+    </script>
+
+    <script>
+        (function () {
+            'use strict'
+
+            // bsCustomFileInput.init()
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.validated-form')
+
+            // Loop over them and prevent submission
+            Array.from(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+</body>
+
+</html>

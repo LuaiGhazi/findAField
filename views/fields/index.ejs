@@ -1,19 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fields</title>
-</head>
-
-<body>
-    <h1>All Fields</h1>
-    <ul>
+<% layout('layouts/boilerplate')%>
+<h1>All Fields</h1>
+<div class='container' m-auto>
+    <div class="row">
         <% for(let field of fields) { %>
-        <li><a href="/fields/<%= field._id%>"><%= field.title%></a></li>
+        <div class="col-md-4 card m-3 p-0" style="width: 18rem;">
+            <img class='card-img-top' src="<%=field.image%>" alt="">
+            <div class='card-body d-flex flex-column justify-content-between'>
+                <h5 class='card-title'>
+                    <%= field.title%>
+                </h5>
+                <p class='card-text'>
+                    <%= field.description%>
+                </p>
+                <p class='card-text'>
+                    <small class='text-muted mt-auto'> Price: <%= field.price  %>
+                    </small>
+                </p>
+                <a class='btn btn-primary mt-auto' href="/fields/<%=field._id%>"> View </a>
+            </div>
+        </div>
         <% }%>
-    </ul>
-</body>
-
-</html>
+    </div>
+</div>

@@ -17,6 +17,11 @@ const Field = require('./models/field');
 //the info that is inputted into forms
 const methodOverride = require('method-override');
 
+//Requiring ejs-mate so that we can use boilerplates and partials 
+const ejsMate = require('ejs-mate');
+
+
+
 //Conncting to the mongoDB named find-a-field
 //27107 is the default port 
 mongoose.connect('mongodb://localhost:27017/find-a-field', {
@@ -35,8 +40,10 @@ db.once('open', () => {
     console.log('Database connected');
 })
 
-
-//'view engine', 'engine' sets the template engine - allows us to not require ejs 
+// use ejs-locals for all ejs templates
+app.engine('ejs', ejsMate)
+//'view engine', 'engine' sets the template engine - allows us to not have 
+//to require ejs at start of file 
 // engines:  https://expressjs.com/en/resources/template-engines.html
 app.set('view engine', 'ejs');
 //The path.join() method joins all given path segments together
@@ -82,11 +89,6 @@ app.get('/fields/:id', async (req, res) => {
     res.render('fields/show', { field })
 })
 
-app.put('/fields/:id/', async (req, res) => {
-    const { id } = req.params
-    const field = await Field.findByIdAndUpdate(id, { ...req.body.field })
-    res.redirect(`/fields/${field._id}`)
-})
 
 //Route to edit specific page 
 app.get('/fields/:id/edit', async (req, res) => {
@@ -94,6 +96,11 @@ app.get('/fields/:id/edit', async (req, res) => {
     res.render('fields/edit', { field })
 })
 
+app.put('/fields/:id/', async (req, res) => {
+    const { id } = req.params
+    const field = await Field.findByIdAndUpdate(id, { ...req.body.field })
+    res.redirect(`/fields/${field._id}`)
+})
 
 //Delete a field 
 app.delete('/fields/:id/', async (req, res) => {

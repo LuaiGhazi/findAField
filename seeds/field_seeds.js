@@ -20,25 +20,29 @@ db.once('open', () => {
 seedFields = [
     {
         title: 'Chinatown Field',
-        price: '$60',
+        image: 'https://source.unsplash.com/collection/6767578',
+        price: 60,
         description: 'Full sized soccer field',
         location: 'Downtown Vancouver'
     },
     {
         title: 'UBC Rec',
-        price: '$55',
+        image: 'https://source.unsplash.com/collection/6767578',
+        price: 55,
         description: 'Full sized soccer field',
         location: 'UBC'
     },
     {
         title: 'Kits Beach Basketball',
-        price: '$25',
+        image: 'https://source.unsplash.com/collection/6767578',
+        price: 25,
         description: 'Basketball court located beside kits beach',
         location: 'Kitsilano Beach'
     },
     {
         title: 'North Van Fields ',
-        price: '$50',
+        image: 'https://source.unsplash.com/collection/6767578',
+        price: 50,
         description: 'Full sized soccer field',
         location: 'Lonsdale'
     },
