@@ -39,6 +39,8 @@ const fields = require('./routes/fields')
 //Routes for the review pages 
 const reviews = require('./routes/reviews')
 
+const session = require('express-session')
+
 //Conncting to the mongoDB named find-a-field
 //27107 is the default port 
 mongoose.connect('mongodb://localhost:27017/find-a-field', {
@@ -79,13 +81,28 @@ app.use(methodOverride('_method'))
 //Telling express to serve our 'public' directory 
 app.use(express.static(path.join(__dirname, 'public')))
 
+//This muyst go before the app.use(routes, filename)
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret!',
+    resave: false,
+    saveUninitalized: true,
+    //Setting an expiration date for the cook 
+    //Date.now() is in millisecond. We set it to expire in a week. 
+    cooke: {
+        //Why we use http only: https://owasp.org/www-community/HttpOnly
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+app.use(session(sessionConfig))
+
 
 //Routes for the fields and reviews pages 
 app.use('/fields', fields)
 app.use('/fields/:id/reviews', reviews)
 
-
-//Route to the home page 
+//Route to the home pagnodee 
 app.get('/', (req, res) => {
     res.render('home')
 })
