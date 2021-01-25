@@ -9,6 +9,10 @@ const fieldSchema = new Schema({
     price: Number,
     description: String,
     location: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     //One to many relationship between field and review 
     reviews: [
         {

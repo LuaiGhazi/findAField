@@ -11,8 +11,11 @@
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item text-muted"><%= field.location%></li>
+                <li class="list-group-item">Submitted by: <%= field.author.username%></li>
                 <li class="list-group-item">$<%= field.price%>/hour</li>
             </ul>
+            <!-- Only the author of the page should be able to see the edit and delete buttons -->
+            <%  if( currentUser && field.author.equals(currentUser._id))  {%>
             <div class="card-body">
                 <a href="/fields/<%=field._id%>/edit" class="card-link btn btn-info">Edit</a>
                 <!-- Because it is a form we have to set the form's class to be inline so that the edit 
@@ -21,6 +24,7 @@
                     <button class='btn btn-danger'>Delete</button>
                 </form>
             </div>
+            <% } %>
             <div class="card-footer text-muted">
                 <a class="card-link btn btn-secondary" href="/fields">Back to All Fields</a>
             </div>
@@ -28,6 +32,9 @@
     </div>
 
     <div class="col-6">
+        <!-- If there is a  logged in user
+        we will render the form for them to leave a review -->
+        <% if(currentUser){ %>
         <h2>Leave a Review</h2>
         <form action="/fields/<%=field._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
             <div class="mb-3">
@@ -43,14 +50,18 @@
             </div>
             <button class='btn btn-success'>Submit</button>
         </form>
+        <% } %>
         <% for(let review of field.reviews) { %>
         <div class="card mb-3 ">
             <div class="card-body">
                 <h5 class="card-title">Rating: <%= review.rating %></h5>
+                <h6 class="card-subtitle mb-2 text-muted">By <%= review.author.username%></h6>
                 <p class="card-text">Review: <%= review.body %></p>
+                <%  if( currentUser && review.author.equals(currentUser._id))  {%>
                 <form action="/fields/<%=field._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
                     <button class="btn btn-sm btn-danger">Delete</button>
                 </form>
+                <% } %>
             </div>
         </div>
         <% } %>

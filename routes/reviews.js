@@ -13,29 +13,17 @@ const Review = require('../models/review')
 
 const catchAsync = require('../utils/catchAsync')
 
-//For errors that we don't throw 
-const ExpressError = require('../utils/ExpressError')
 
+const { validateReview, isLoggedIn, isReviewAuthor } = require('../middleware')
 
-//Requiring joi schemas for Server Side validation 
-const { reviewSchema } = require('../schemas.js')
-
-//Middleware for server side validation
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    } else {
-        next();
-    }
-}
 
 //Posting Reviews
-router.post('/', validateReview, catchAsync(async (req, res) => {
+router.post('/', isLoggedIn, validateReview, catchAsync(async (req, res) => {
     // res.send('You made it')
     const field = await Field.findById(req.params.id);
     const review = new Review(req.body.review);
+    //Associating a review with the author of the review
+    review.author = req.user._id
     //Reviews in the field schema are an array
     //so we just push into it 
     field.reviews.push(review);
@@ -46,7 +34,7 @@ router.post('/', validateReview, catchAsync(async (req, res) => {
 }))
 
 //Deleting Reviews 
-router.delete('/:reviewId', catchAsync(async (req, res) => {
+router.delete('/:reviewId', isLoggedIn, isReviewAuthor, catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
     await Field.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);

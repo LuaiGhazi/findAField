@@ -23,28 +23,32 @@ seedFields = [
         image: 'https://source.unsplash.com/collection/6767578',
         price: 60,
         description: 'Full sized soccer field',
-        location: 'Downtown Vancouver'
+        location: 'Downtown Vancouver',
+        author: '600e0a773f7a130629f9f2ca'
     },
     {
         title: 'UBC Rec',
         image: 'https://source.unsplash.com/collection/6767578',
         price: 55,
         description: 'Full sized soccer field',
-        location: 'UBC'
+        location: 'UBC',
+        author: '600e0a773f7a130629f9f2ca'
     },
     {
         title: 'Kits Beach Basketball',
         image: 'https://source.unsplash.com/collection/6767578',
         price: 25,
         description: 'Basketball court located beside kits beach',
-        location: 'Kitsilano Beach'
+        location: 'Kitsilano Beach',
+        author: '600e0a773f7a130629f9f2ca'
     },
     {
         title: 'North Van Fields ',
         image: 'https://source.unsplash.com/collection/6767578',
         price: 50,
         description: 'Full sized soccer field',
-        location: 'Lonsdale'
+        location: 'Lonsdale',
+        author: '600e0a773f7a130629f9f2ca'
     },
 ]
 
