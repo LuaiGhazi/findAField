@@ -1,51 +1,23 @@
-const passport = require('passport');
-const catchAsync = require('../utils/catchAsync');
-// const users = require('../controllers/users')
-
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
+const catchAsync = require('../utils/catchAsync');
 const User = require('../models/user');
+const users = require('../controllers/users')
 
 
-// Register Page 
+router.route('/register')
+    .get(users.renderRegister)
+    .post(catchAsync(users.register));
 
-router.get('/register', (req, res) => {
-    res.render('users/register');
-});
+router.route('/login')
+    .get(users.renderLogin)
+    .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), users.login)
 
+router.get('/logout', users.logout)
 
-router.post('/register', catchAsync(async (req, res, next) => {
-    try {
-        //Destructuring what we want from req.bdoy
-        const { email, username, password } = req.body;
-        //Pass e-mail and username into a new object called user 
-        const user = new User({ email, username });
-        //Call user.register to take the new user and 
-        //store the hashed password and the salt 
-        //on the new user 
-        const registeredUser = await User.register(user, password);
-        //To login the 'registeredUser' automaticaly
-        //after they register
-        //Docs: http://www.passportjs.org/docs/login/
-        req.login(registeredUser, err => {
-            if (err) return next(err);
-            req.flash('success', 'Welcome to Find a Field!');
-            res.redirect('/fields');
-        })
-    } catch (e) {
-        //If there is an error (such as username is taken)
-        //then flash the error message
-        req.flash('error', e.message);
-        //Redirect us back to the register page
-        res.redirect('register');
-    }
-}));
+module.exports = router;
 
-
-//login page 
-router.get('/login', (req, res) => {
-    res.render('users/login');
-})
 
 //We can use the passport.authenticate method. We're telling it to authenticate using the local strategy 
 //Flashes a failure message if there's a failure and redirects back to the login page if there is a failure

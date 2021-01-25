@@ -10,7 +10,7 @@ module.exports.fieldSchema = Joi.object({
         // contains the key price and it is a number and is required
         price: Joi.number().required().min(0),
         // image: Joi.string().required(),
-        image: Joi.string().required(),
+        // image: Joi.string().required(),
         location: Joi.string().required(),
         description: Joi.string().required()
     }).required()

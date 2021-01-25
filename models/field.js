@@ -5,7 +5,14 @@ const Review = require('./review')
 
 const fieldSchema = new Schema({
     title: String,
-    image: String,
+    images: [
+        {
+            //The path froum cloudinary
+            url: String,
+            //The file name froum cloudinary
+            filename: String
+        }
+    ],
     price: Number,
     description: String,
     location: String,

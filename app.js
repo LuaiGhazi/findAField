@@ -1,3 +1,11 @@
+
+// If we're in development require the env package 
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
+
+
 //Requiring express 
 //Allows us to build web apps 
 const express = require('express');

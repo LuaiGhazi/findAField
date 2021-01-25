@@ -1,84 +1,44 @@
 const express = require('express')
 const router = express.Router()
-
+//Requiring our controllers file 
+//that contains part of our routes 
+const fields = require('../controllers/fields')
 // Requiring our catchAsync for error-handling
 const catchAsync = require('../utils/catchAsync')
 
 //Requiring our field model 
 const Field = require('../models/field');
 
+//Multer adds a body object and a file or files object to the request object. 
+//The body object contains the values of the text fields of the form, the 
+//file or files object contains the files uploaded via the form.
+const multer = require('multer')
+const { storage } = require('../cloudinary')
+const upload = multer({ storage })
 
 //LogIn Middleware
 const { isLoggedIn, isAuthor, validateField } = require('../middleware')
 
-//Route to the fields page
-//Pass the fields vble (an object) through the render line
-// so that the EJS page has access to that variable
-router.get('/', (async (req, res) => {
-    const fields = await Field.find({});
-    res.render('fields/index', { fields })
-}))
+//Route to the all fields page
+router.route('/')
+    .get(catchAsync(fields.index))
+    .post(isLoggedIn, upload.array('image'), validateField, catchAsync(fields.createField))
 
 //Route to create new field 
-router.get('/new', isLoggedIn, (req, res) => {
-    res.render('fields/new')
-})
+router.get('/new', isLoggedIn, fields.renderNewForm)
 
-router.post('/', isLoggedIn, validateField, catchAsync(async (req, res) => {
-    const field = new Field(req.body.field);
-    // Storing the id of the user that created the new field 
-    field.author = req.user._id;
-    await field.save();
-    req.flash('success', 'Successfuly made a new field!')
-    res.redirect(`/fields/${field._id}`)
-}))
+router.route('/:id')
+    //route to the fields specific page
+    .get(catchAsync(fields.showField))
+    //update field route
+    .put(isLoggedIn, isAuthor, validateField, catchAsync(fields.updateField))
+    //delete field route
+    .delete(isLoggedIn, catchAsync(fields.deleteField))
 
-//Route to the field specific page 
-router.get('/:id', catchAsync(async (req, res) => {
-    //Populating reviews and authors because they're in their own collection 
-    //and have a one to many relationship with fields 
-    //Using a nested populate so that we can populate a review 
-    //and then on each review populate the author
-    const field = await Field.findById(req.params.id).populate({
-        path: 'reviews',
-        populate: {
-            path: 'author'
-        }
-        //and then separately we populate the author of the field  
-    }).populate('author');
-    //flash message if a person tried to access a specific field page 
-    //that doesn't exist / no longer exists
-    if (!field) {
-        req.flash('error', 'Cannot find that field!');
-        return res.redirect('/fields');
-    }
-    res.render('fields/show', { field })
-}))
 
 //Route to edit specific page 
-router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(async (req, res) => {
-    const { id } = req.params
-    const field = await Field.findById(id);
-    if (!field) {
-        req.flash('error', 'Cannot find that campground')
-        res.redirect(`/fields/${field._id}`)
-    }
-    res.render('fields/edit', { field })
-}))
+router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(fields.renderEditForm))
 
-router.put('/:id', isLoggedIn, isAuthor, validateField, catchAsync(async (req, res) => {
-    const { id } = req.params
-    const field = await Field.findByIdAndUpdate(id, { ...req.body.field })
-    req.flash('success', 'Successfuly updated field!')
-    res.redirect(`/fields/${field._id}`)
-}))
 
-//Delete a field 
-router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Field.findByIdAndDelete(id);
-    req.flash('success', 'Successfully deleted field')
-    res.redirect('/fields')
-}))
 
 module.exports = router; 
