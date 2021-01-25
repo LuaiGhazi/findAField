@@ -14,6 +14,8 @@ const Field = require('../models/field');
 //Requiring joi schema for Server Side validation 
 const { fieldSchema } = require('../schemas.js')
 
+//LogIn Middleware
+const { isLoggedIn } = require('../middleware')
 
 //Middleware for server side validation
 const validateField = (req, res, next) => {
@@ -30,18 +32,17 @@ const validateField = (req, res, next) => {
 //Route to the fields page
 //Pass the fields vble (an object) through the render line
 // so that the EJS page has access to that variable
-router.get('/', catchAsync(async (req, res) => {
+router.get('/', (async (req, res) => {
     const fields = await Field.find({});
     res.render('fields/index', { fields })
 }))
 
 //Route to create new field 
-router.get('/new', catchAsync(async (req, res) => {
-    const field = await Field.findById(req.params.id);
-    res.render('fields/new', { field })
-}))
+router.get('/new', isLoggedIn, (req, res) => {
+    res.render('fields/new')
+})
 
-router.post('/', validateField, catchAsync(async (req, res) => {
+router.post('/', isLoggedIn, validateField, catchAsync(async (req, res) => {
     const field = new Field(req.body.field);
     await field.save();
     req.flash('success', 'Successfuly made a new field!')
@@ -63,12 +64,12 @@ router.get('/:id', catchAsync(async (req, res) => {
 }))
 
 //Route to edit specific page 
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
     const field = await Field.findById(req.params.id);
     res.render('fields/edit', { field })
 }))
 
-router.put('/:id/', validateField, catchAsync(async (req, res) => {
+router.put('/:id/', isLoggedIn, validateField, catchAsync(async (req, res) => {
     const { id } = req.params
     const field = await Field.findByIdAndUpdate(id, { ...req.body.field })
     req.flash('success', 'Successfuly updated field!')
@@ -76,7 +77,7 @@ router.put('/:id/', validateField, catchAsync(async (req, res) => {
 }))
 
 //Delete a field 
-router.delete('/:id/', catchAsync(async (req, res) => {
+router.delete('/:id/', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Field.findByIdAndDelete(id);
     req.flash('success', 'Successfully deleted field')
