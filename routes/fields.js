@@ -31,7 +31,7 @@ router.route('/:id')
     //route to the fields specific page
     .get(catchAsync(fields.showField))
     //update field route
-    .put(isLoggedIn, isAuthor, validateField, catchAsync(fields.updateField))
+    .put(isLoggedIn, isAuthor, upload.array('image'), validateField, catchAsync(fields.updateField))
     //delete field route
     .delete(isLoggedIn, catchAsync(fields.deleteField))
 

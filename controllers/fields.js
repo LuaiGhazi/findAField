@@ -1,6 +1,11 @@
 //Requiring our field model 
 const Field = require('../models/field');
 
+// Requiring it so that we can delete images from cloudinary
+const { cloudinary } = require('../cloudinary')
+
+
+
 //Pass the fields vble (an object) through the render line
 // so that the EJS page has access to that variable
 module.exports.index = async (req, res) => {
@@ -60,6 +65,19 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateField = async (req, res) => {
     const { id } = req.params
     const field = await Field.findByIdAndUpdate(id, { ...req.body.field })
+    //mapping over the array that can now be accessed through req.files due to multzer 
+    //and take the path and filename
+    //We then push the info to field.images
+    // Spread will pass the imgs in as separate arguments into the array
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    field.images.push(...imgs);
+    await field.save();
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        await field.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+    }
     req.flash('success', 'Successfuly updated field!')
     res.redirect(`/fields/${field._id}`)
 }

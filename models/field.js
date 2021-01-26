@@ -3,16 +3,21 @@ const Schema = mongoose.Schema;
 const Review = require('./review')
 
 
+//Created this image schema so that we can control the
+//size of the images being displayed on our app 
+const ImageSchema = new Schema({
+    url: String,
+    filename: String
+});
+
+ImageSchema.virtual('thumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/w_200');
+});
+
+
 const fieldSchema = new Schema({
     title: String,
-    images: [
-        {
-            //The path froum cloudinary
-            url: String,
-            //The file name froum cloudinary
-            filename: String
-        }
-    ],
+    images: [ImageSchema],
     price: Number,
     description: String,
     location: String,

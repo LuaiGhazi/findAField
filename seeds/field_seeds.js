@@ -20,36 +20,64 @@ db.once('open', () => {
 seedFields = [
     {
         title: 'Chinatown Field',
-        image: 'https://source.unsplash.com/collection/6767578',
         price: 60,
         description: 'Full sized soccer field',
         location: 'Downtown Vancouver',
-        author: '600e0a773f7a130629f9f2ca'
+        author: '600e0a773f7a130629f9f2ca',
+        images: [{
+            url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
+            filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
+        },
+        {
+            url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/wesu2g1cfptjkk188rde.jpg',
+            filename: 'find-a-field/wesu2g1cfptjkk188rde'
+        }]
     },
     {
         title: 'UBC Rec',
-        image: 'https://source.unsplash.com/collection/6767578',
         price: 55,
         description: 'Full sized soccer field',
         location: 'UBC',
-        author: '600e0a773f7a130629f9f2ca'
+        author: '600e0a773f7a130629f9f2ca',
+        images: [{
+            url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
+            filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
+        },
+        {
+            url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/wesu2g1cfptjkk188rde.jpg',
+            filename: 'find-a-field/wesu2g1cfptjkk188rde'
+        }]
     },
     {
         title: 'Kits Beach Basketball',
-        image: 'https://source.unsplash.com/collection/6767578',
         price: 25,
         description: 'Basketball court located beside kits beach',
         location: 'Kitsilano Beach',
-        author: '600e0a773f7a130629f9f2ca'
+        author: '600e0a773f7a130629f9f2ca',
+        images: [{
+            url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
+            filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
+        },
+        {
+            url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/wesu2g1cfptjkk188rde.jpg',
+            filename: 'find-a-field/wesu2g1cfptjkk188rde'
+        }]
     },
     {
         title: 'North Van Fields ',
-        image: 'https://source.unsplash.com/collection/6767578',
         price: 50,
         description: 'Full sized soccer field',
         location: 'Lonsdale',
-        author: '600e0a773f7a130629f9f2ca'
-    },
+        author: '600e0a773f7a130629f9f2ca',
+        images: [{
+            url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
+            filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
+        },
+        {
+            url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/wesu2g1cfptjkk188rde.jpg',
+            filename: 'find-a-field/wesu2g1cfptjkk188rde'
+        }]
+    }
 ]
 
 // Fix this so that we empty 
