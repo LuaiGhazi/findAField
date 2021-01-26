@@ -4,7 +4,10 @@ const Field = require('../models/field');
 // Requiring it so that we can delete images from cloudinary
 const { cloudinary } = require('../cloudinary')
 
-
+// Requiring mapbox 
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken })
 
 //Pass the fields vble (an object) through the render line
 // so that the EJS page has access to that variable
@@ -19,7 +22,13 @@ module.exports.renderNewForm = (req, res) => {
 }
 
 module.exports.createField = async (req, res) => {
+    const geoData = await geocoder.forwardGeocode({
+        query: req.body.field.location,
+        limit: 1
+    }).send()
     const field = new Field(req.body.field);
+    //after we create the field we're adding the geoData to it
+    field.geometry = geoData.body.features[0].geometry;
     //mapping over the array that can now be accessed through req.files due to multzer 
     //and take the path and filename
     //We then add the info to field.images
@@ -27,6 +36,7 @@ module.exports.createField = async (req, res) => {
     // Storing the id of the user that created the new field 
     field.author = req.user._id;
     await field.save();
+    console.log(field)
     req.flash('success', 'Successfuly made a new field!')
     res.redirect(`/fields/${field._id}`)
 }

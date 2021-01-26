@@ -18,6 +18,17 @@ ImageSchema.virtual('thumbnail').get(function () {
 const fieldSchema = new Schema({
     title: String,
     images: [ImageSchema],
+    geometry: { //docs: https://mongoosejs.com/docs/geojson.html
+        type: {
+            type: String,
+            enum: ['Point'], // 'location.type' must be 'Point'
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
     price: Number,
     description: String,
     location: String,

@@ -20,6 +20,10 @@ db.once('open', () => {
 seedFields = [
     {
         title: 'Chinatown Field',
+        geometry: {
+            type: "Point",
+            coordinates: [-113.1331, 47.0202]
+        },
         price: 60,
         description: 'Full sized soccer field',
         location: 'Downtown Vancouver',
@@ -35,6 +39,10 @@ seedFields = [
     },
     {
         title: 'UBC Rec',
+        geometry: {
+            type: "Point",
+            coordinates: [-113.1331, 47.0202]
+        },
         price: 55,
         description: 'Full sized soccer field',
         location: 'UBC',
@@ -50,6 +58,10 @@ seedFields = [
     },
     {
         title: 'Kits Beach Basketball',
+        geometry: {
+            type: "Point",
+            coordinates: [-113.1331, 47.0202]
+        },
         price: 25,
         description: 'Basketball court located beside kits beach',
         location: 'Kitsilano Beach',
@@ -65,6 +77,10 @@ seedFields = [
     },
     {
         title: 'North Van Fields ',
+        geometry: {
+            type: "Point",
+            coordinates: [-113.1331, 47.0202]
+        },
         price: 50,
         description: 'Full sized soccer field',
         location: 'Lonsdale',
