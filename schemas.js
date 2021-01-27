@@ -24,10 +24,10 @@ const extension = (joi) => ({
 
 const Joi = BaseJoi.extend(extension)
 
-module.exports.campgroundSchema = Joi.object({
+module.exports.fieldSchema = Joi.object({
     //Setting the server side requirements for any POST 
     //field has to be an object 
-    campground: Joi.object({
+    field: Joi.object({
         // contains the key title and it is a string and is required
         title: Joi.string().required().escapeHTML(),
         // contains the key price and it is a number and is required
