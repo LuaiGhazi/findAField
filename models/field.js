@@ -14,6 +14,7 @@ ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
 });
 
+const opts = { toJSON: { virtuals: true } };
 
 const fieldSchema = new Schema({
     title: String,
@@ -43,7 +44,14 @@ const fieldSchema = new Schema({
             ref: 'Review'
         }
     ]
+}, opts);
+
+fieldSchema.virtual('properties.popUpMarkup').get(function () {
+    return `
+    <strong><a href="/fields/${this._id}">${this.title}</a><strong>
+    <p>${this.description.substring(0, 20)}...</p>`
 });
+
 
 //When a field is deleted, we want all the reviews associated with it
 //to be deleted as well 

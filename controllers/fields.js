@@ -66,7 +66,7 @@ module.exports.renderEditForm = async (req, res) => {
     const { id } = req.params
     const field = await Field.findById(id);
     if (!field) {
-        req.flash('error', 'Cannot find that campground')
+        req.flash('error', 'Cannot find that field')
         res.redirect(`/fields/${field._id}`)
     }
     res.render('fields/edit', { field })
