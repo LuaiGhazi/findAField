@@ -4,8 +4,6 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
-
-
 //Requiring express 
 //Allows us to build web apps 
 const express = require('express');
@@ -52,6 +50,10 @@ const flash = require('connect-flash')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 
+//Requiring mongo-sanitize and helmet for security  
+const mongoSanitize = require('express-mongo-sanitize')
+const helmet = require('helmet')
+
 //Requiring the user schema/model 
 const User = require('./models/user')
 
@@ -64,12 +66,14 @@ const fieldRoutes = require('./routes/fields')
 //Routes for the review pages 
 const reviewRoutes = require('./routes/reviews')
 
+const MongoDBStore = require('connect-mongo')(session)
 
 
-
-//Conncting to the mongoDB named find-a-field
+//In development conncting to the mongoDB named find-a-field
 //27107 is the default port 
-mongoose.connect('mongodb://localhost:27017/find-a-field', {
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/find-a-field'
+
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -108,10 +112,28 @@ app.use(methodOverride('_method'))
 //Telling express to serve our 'public' directory 
 app.use(express.static(path.join(__dirname, 'public')))
 
+//Basic Mongo Security 
+app.use(mongoSanitize())
+
+
+const secret = process.env.SECRET || 'thisshouldbeabettersecret!'
+const store = new MongoDBStore({
+    url: dbUrl,
+    secret,
+    //lazy update
+    touchAfter: 24 * 60 * 60
+});
+
+store.on('error', function (e) {
+    console.log('SESSION STORE ERROR', e)
+})
+
 //This muyst go before 
 //the route handlers" app.use(routes, filename)
 const sessionConfig = {
-    secret: 'thisshouldbeabettersecret!',
+    store,
+    name: 'session',
+    secret,
     resave: false,
     saveUninitalized: true,
     //Setting an expiration date for the cook 
@@ -119,6 +141,7 @@ const sessionConfig = {
     cookie: {
         //Why we use http only: https://owasp.org/www-community/HttpOnly
         httpOnly: true,
+        // secure: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
@@ -127,6 +150,58 @@ const sessionConfig = {
 
 app.use(session(sessionConfig))
 app.use(flash());
+
+app.use(helmet())
+
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://api.mapbox.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net",
+    "https://cdn.jsdelivr.net"
+];
+const styleSrcUrls = [
+    "https://kit-free.fontawesome.com/",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.mapbox.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+    'https://cdn.jsdelivr.net'
+];
+const connectSrcUrls = [
+    "https://api.mapbox.com/",
+    "https://a.tiles.mapbox.com/",
+    "https://b.tiles.mapbox.com/",
+    "https://events.mapbox.com/",
+    ''
+];
+
+const fontSrcUrls = [];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/dho74nw77/", //Cloudinary account details go here 
+                "https://images.unsplash.com/",
+                'https://source.unsplash.com/'
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
+
 
 //Configuring passport/possport-local
 //Middleware is required to initialize Passport. 
