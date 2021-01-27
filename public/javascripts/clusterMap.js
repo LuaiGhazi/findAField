@@ -6,7 +6,8 @@ const map = new mapboxgl.Map({
     zoom: 3
 });
 
-
+//Adding navigation controls on to the map
+map.addControl(new mapboxgl.NavigationControl());
 
 
 map.on('load', function () {
