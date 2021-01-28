@@ -4,7 +4,16 @@ const mongoose = require('mongoose');
 const Field = require('../models/field');
 
 
-mongoose.connect('mongodb://localhost:27017/find-a-field', {
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
+//In development conncting to the mongoDB named find-a-field
+//27107 is the default port 
+
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/find-a-field'
+
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
@@ -27,7 +36,7 @@ seedFields = [
         price: 60,
         description: 'Full sized soccer field',
         location: 'Vancouver, BC',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -46,7 +55,7 @@ seedFields = [
         price: 55,
         description: 'Full sized soccer field',
         location: 'Vancouver, BC',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -65,7 +74,7 @@ seedFields = [
         price: 25,
         description: 'Basketball court located beside kits beach',
         location: 'Vancouver, BC',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -84,7 +93,7 @@ seedFields = [
         price: 55,
         description: 'Full sized soccer field',
         location: 'North Vancouver, BC',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -103,7 +112,7 @@ seedFields = [
         price: 50,
         description: 'Full sized soccer field',
         location: 'Toronto, ON',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -122,7 +131,7 @@ seedFields = [
         price: 60,
         description: 'A turf field with bathrooms and a small playground',
         location: 'Vancouver, BC',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -141,7 +150,7 @@ seedFields = [
         price: 75,
         description: 'Soccer field in Hastings Park.',
         location: 'Vancouver, BC',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -160,7 +169,7 @@ seedFields = [
         price: 40,
         description: 'Soccer field in Hastings Park.',
         location: 'Vancouver, BC',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -179,7 +188,7 @@ seedFields = [
         price: 35,
         description: 'Small turf soccer field with free parking.',
         location: 'Vancouver, BC',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -198,7 +207,7 @@ seedFields = [
         price: 85,
         description: 'Natural grass field with running track',
         location: 'Vancouver, BC',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -217,7 +226,7 @@ seedFields = [
         price: 85,
         description: 'Large grass field in Murdo Frazer Park',
         location: 'North Vancouver, BC',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -236,7 +245,7 @@ seedFields = [
         price: 85,
         description: 'Over 20 Indoor and outdoor soccer fields for all ages',
         location: 'Calgary, AB',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -255,7 +264,7 @@ seedFields = [
         price: 40,
         description: 'Soccer fields with several bleachers.',
         location: 'Calgary, AB',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -274,7 +283,7 @@ seedFields = [
         price: 20,
         description: 'Poorly maintained field, but still fun for the little ones',
         location: 'Calgary, AB',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -293,7 +302,7 @@ seedFields = [
         price: 45,
         description: 'This is a great facility for all sorts of sports. Football, soccer and baseball. Several fields and diamonds. Lots of parking.',
         location: 'Calgary, AB',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -312,7 +321,7 @@ seedFields = [
         price: 45,
         description: 'Good fields, but difficult to access',
         location: 'Calgary, AB',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -331,7 +340,7 @@ seedFields = [
         price: 50,
         description: 'It has everything tennis courts, baseball diamond, soccer fields, cricket field and a dog park.',
         location: 'Toronto, ON',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -350,7 +359,7 @@ seedFields = [
         price: 60,
         description: 'Very large natural grass field.',
         location: 'Toronto, ON',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
@@ -369,7 +378,7 @@ seedFields = [
         price: 60,
         description: 'Very good place for soccer. I and my mates come here almost every week. Parking lot is enough, the soccer field is clean.',
         location: 'Toronto, ON',
-        author: '600e0a773f7a130629f9f2ca',
+        author: '6011ebb481f8db0015c6d09e',
         images: [{
             url: 'https://res.cloudinary.com/dho74nw77/image/upload/v1611612816/find-a-field/ipdatxcgi0t2sdt6jknk.jpg',
             filename: 'find-a-field/ipdatxcgi0t2sdt6jknk'
