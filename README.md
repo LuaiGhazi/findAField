@@ -9,7 +9,7 @@
 * [Future Work](#future-work)
 
 ## General info
-This project is a CRUD application that allows users to create accounts and submit images, reviews, and information about local soccer fields. The applicaiton also includes an interactive map that allows users to get a quick glimpse of the fields that are closest to them. 
+This project is a CRUD application that allows users to create accounts and submit images, reviews, and information about local soccer fields. The application also includes an interactive map that allows users to get a quick glimpse of the fields that are closest to them. 
 
 
 ## Live demo
