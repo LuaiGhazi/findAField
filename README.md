@@ -74,7 +74,7 @@ Project is created with:
 This app contains API passwords that have been hidden deliberately. Therefore, the app cannot be run on your local machine without creating your own credentials for the relevant APIs. 
 
 To clone or download this repository: 
-> git clone https://github.com/luaighazi/find-a-field.git
+> git clone https://github.com/luaighazi/findAField.git
 
 To install dependencies:
 > npm install
